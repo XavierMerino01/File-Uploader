@@ -6,18 +6,34 @@
 </head>
 <body>
   <% if (locals.user) {%>
-    <h1>WELCOME BACK <%= user.username %></h1>
+    <h1>WELCOME BACK <%= user.name %></h1>
+    <% if (user.folders) { %>
+      <h2>Your Folders</h2>
+      <ul>
+        <% user.folders.forEach(folder => { %>
+          <li><a href="/folders/<%= folder.id%>"><%= folder.name %></a></li>
+        <% }) %>
+      </ul>
+    <% } else { %>
+      <h1>Welcome to the File Upload App</h1>
+      <p>Create your first folder to post files.</p>
+    <% } %>
+    <form action="/folders" method="POST">
+      <label for="name">Folder Name</label>
+      <input type="text" name="name" id="name" placeholder="Example Folder" required />
+      <button type="submit">Create Folder</button>
+    </form>
     <a href="/log-out">LOG OUT</a>
   <% } else { %>
     <h1>Log In</h1>
-  <form action="/log-in" method="POST">
-    <label for="email">Email</label>
-    <input id="email" name="email" placeholder="example@example.com" type="email" />
-    <label for="password">Password</label>
-    <input id="password" name="password" type="password" />
-    <button type="submit">Log In</button>
-    <a href="/sign-up">Sign Up</a>
-  </form>
-  <%}%>
+    <form action="/log-in" method="POST">
+      <label for="email">Email</label>
+      <input id="email" name="email" placeholder="example@example.com" type="email" />
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" />
+      <button type="submit">Log In</button>
+      <a href="/sign-up">Sign Up</a>
+    </form>
+  <% } %>
 </body>
 </html>

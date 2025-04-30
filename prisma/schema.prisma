@@ -26,4 +26,22 @@ model User {
   email   String   @unique
   name    String?
   password    String 
+  folders  Folder[]
+}
+
+model Folder {
+  id       Int      @id @default(autoincrement())
+  name     String
+  files    File[]
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  Int?
+}
+
+model File {
+  id       Int      @id @default(autoincrement())
+  name     String   @unique
+  url      String
+  size     Int
+  folder   Folder?    @relation(fields: [folderId], references: [id])
+  folderId  Int?
 }

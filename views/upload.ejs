@@ -1,0 +1,10 @@
+
+  <form action="/upload" method="POST" enctype="multipart/form-data">
+    <label for="name">File Name</label>
+    <input id="name" name="name" placeholder="Example File" type="text" />
+    <label for="uploaded_file">File</label>
+    <input type="file" name="uploaded_file" />
+    <input type="hidden" name="folderId" value="<%= folderId %>">
+    <button type="submit">Upload</button>
+    <a href="/">Home</a>
+  </form>
