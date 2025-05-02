@@ -20,9 +20,13 @@ usersRouter.post("/sign-up", userController.createNewUser);
 
 usersRouter.post("/folders", userController.createNewFolder);
 
+usersRouter.post("/folders/:id/delete", userController.deleteFolderById);
+
 usersRouter.post("/upload", upload.single('uploaded_file'), userController.createNewFile);
 
 usersRouter.get("/folders/:id", userController.getFolderById);
+
+usersRouter.get("/files/:id", userController.getFileById);
 
 usersRouter.get("/log-out", (req, res) => {
   req.session.destroy((err) => {
@@ -34,5 +38,7 @@ usersRouter.get("/log-out", (req, res) => {
   });
 });
 
+
+usersRouter.post('/folders/:id/edit', userController.editFolderById);
 
 module.exports = usersRouter;

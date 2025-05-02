@@ -11,7 +11,7 @@
         <h2>Folder Files</h2>
         <ul>
           <% folder.files.forEach(file => { %>
-            <li><%= file.name %></li>
+            <a href="/files/<%= file.id%>"><%= file.name %></a>
           <% }) %>
         </ul>
       <% } %>

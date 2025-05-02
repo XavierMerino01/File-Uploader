@@ -11,7 +11,13 @@
       <h2>Your Folders</h2>
       <ul>
         <% user.folders.forEach(folder => { %>
-          <li><a href="/folders/<%= folder.id%>"><%= folder.name %></a></li>
+          <li>
+            <a href="/folders/<%= folder.id%>"><%= folder.name %></a>
+            <button class="edit-button" data-folder-id="<%= folder.id %>">Edit</button>
+            <form action="/folders/<%= folder.id %>/delete" method="POST">
+              <button type="submit">Delete</button>
+            </form>
+          </li>
         <% }) %>
       </ul>
     <% } else { %>
@@ -36,4 +42,65 @@
     </form>
   <% } %>
 </body>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+
+  const editButtons = document.querySelectorAll('.edit-button');
+
+  function editFolder(event) {
+      const folderId = this.dataset.folderId;
+      const listItem = this.parentNode;
+      const folderName = listItem.querySelector('a').textContent;
+
+      // Create input field and save button
+      const inputField = document.createElement('input');
+      inputField.type = 'text';
+      inputField.value = folderName;
+
+      const saveButton = document.createElement('button');
+      saveButton.textContent = 'Save';
+
+      // Replace folder name with input field and save button
+      listItem.innerHTML = '';
+      listItem.appendChild(inputField);
+      listItem.appendChild(saveButton);
+
+      saveButton.addEventListener('click', function() {
+        const newFolderName = inputField.value;
+
+        // Send AJAX request to update folder name
+        fetch(`/folders/${folderId}/edit`, {
+          method: 'POST', // Or PUT, depending on your route
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ name: newFolderName })
+        })
+        .then(response => {
+          if (response.ok) {
+            // Update the folder name in the list
+            listItem.innerHTML = `<a href="/folders/${folderId}">${newFolderName}</a>
+                                  <button class="edit-button" data-folder-id="${folderId}">Edit</button>
+                                  <form action="/folders/${folderId}/delete" method="POST">
+                                    <button type="submit">Delete</button>
+                                  </form>`;
+            //Re-attach event listeners to the new edit button
+            const newEditButton = listItem.querySelector('.edit-button');
+            newEditButton.addEventListener('click', editFolder);
+          } else {
+            console.error('Error updating folder name');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+      });
+  }
+
+  editButtons.forEach(button => {
+    button.addEventListener('click', editFolder);
+  });
+});
+</script>
 </html>
